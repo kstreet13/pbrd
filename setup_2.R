@@ -12,26 +12,18 @@ sce$nGene <- colSums(assay(sce,'counts') > 0)
 
 # gene filtering
 require(scry)
-sce <- devianceFeatureSelection(sce, fam = 'binomial', batch = factor(sce$Sample))
+sce <- devianceFeatureSelection(sce, fam = 'binomial')
 #plot(sort(rowData(sce)$binomial_deviance, decreasing = TRUE))
 #plot(log1p(sort(rowData(sce)$binomial_deviance, decreasing = TRUE)))
-sce <- devianceFeatureSelection(sce, fam = 'binomial', nkeep = 5000, batch = factor(sce$Sample))
+sce <- devianceFeatureSelection(sce, fam = 'binomial', nkeep = 5000)
 
 # initial dimred (~PCA)
 #sce <- nullResiduals(sce, fam = 'binomial', type = 'deviance', batch = factor(sce$Sample))
-res <- matrix(0.0, nrow = nrow(sce), ncol = ncol(sce))
-for(b in unique(sce$Sample)){
-    idx <- which(sce$Sample == b)
-    res[,idx] <- as.matrix(nullResiduals(assay(sce,'counts')[,idx], fam = 'binomial', type = 'deviance'))
-}
-assay(sce,'binomial_deviance_residuals', withDimnames=FALSE) <- res
-rm(res)
-
-
-pca <- BiocSingular::runPCA(t(assay(sce,'binomial_deviance_residuals')), rank = 50)
-reducedDim(sce, 'pca') <- pca$x
-rm(pca)
-# plot(pca$sdev^2) # 20 looks like enough, maybe 25
+assay(sce,'logcounts') <- log1p(assay(sce,'counts'))
+require(batchelor)
+sceMNN <- batchCorrect(sce, batch = sce$Sample, PARAM = FastMnnParam())
+reducedDim(sce,'mnn') <- reducedDim(sceMNN,'corrected')
+rm(sceMNN)
 
 # UMAP
 require(Seurat)
@@ -39,7 +31,7 @@ norm <- log1p(1e4*t(t(assay(sce,'counts')) / colSums(assay(sce,'counts'))))
 assay(sce,'logcounts') <- norm
 rm(norm)
 seu <- as.Seurat(sce)
-seu <- RunUMAP(seu, reduction = 'pca', dims = 1:25)
+seu <- RunUMAP(seu, reduction = 'mnn', dims = 1:25)
 reducedDim(sce,'umap') <- seu@reductions$umap@cell.embeddings
 rm(seu)
 
@@ -52,6 +44,5 @@ plot(reducedDim(sce,'umap'),asp=1, col='grey90')
 points(reducedDim(sce,'umap')[sce$Sample=='prd_1', ], col=alpha(brewer.pal(9,'Set1')[2], alpha=.5))
 layout(1)
 
-
-# some batch effects present in UMAP, will try again with MNN
+# looks better
 
