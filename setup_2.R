@@ -1,3 +1,4 @@
+set.seed(1)
 
 # setup
 require(DropletUtils)

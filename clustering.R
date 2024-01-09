@@ -1,4 +1,5 @@
-# source('setup_2.R')
+source('setup_2.R')
+set.seed(1)
 
 seu <- as.Seurat(sce)
 seu <- FindNeighbors(seu, reduction = "mnn", dims = 1:25)
@@ -34,11 +35,6 @@ big <- apply(clusMat,1,function(x){
 h <- hclust(as.dist(1-big))
 
 
-png(filename = '~/Desktop/coclus.png', width = 1000, height = 1000)
-image(big[h$order,h$order])
-dev.off()
-
-
 
 # which clustering is most consistent with overall agreement?
 diag(big) <- NA
@@ -58,6 +54,7 @@ between <- apply(clusMat,2,function(cl){
 })
 diag(big) <- 1
 
+require(cluster)
 d.all <- dist(reducedDim(sce,'mnn')[,1:25])
 sil <- apply(clusMat,2,function(cl){
     s <- silhouette(as.integer(cl), d.all)
@@ -74,67 +71,34 @@ locAg <- apply(clusMat,2,function(cl){
 rm(nn)
 
 
-
-plot(c(1,ncol(clusMat)), 0:1, col='white')
-points(within, col=4)
-points(between, col=2)
-abline(v = which.max(within - between))
-points(sil, col=3)
-points(locAg, col = 5)
-
+# plot(c(1,ncol(clusMat)), 0:1, col='white')
+# points(within, col=4)
+# points(between, col=2)
+# abline(v = which.max(within - between))
+# points(sil, col=3)
+# points(locAg, col = 5)
 
 
+# choose the winner
 clus <- factor(clusMat[,which.max(within - between + locAg + sil)])
 
-
-# image(big[h$order,h$order])
 
 
 
 table(clus, sce$Sample)
 
 
-png(filename = '~/Desktop/umap.png', width = 1000, height = 1000, res=100)
-plot(reducedDim(sce,'umap'),asp=1, col=colorby(clus), pch=16, main='UMAP - pbrd_1 and prd_1')
-
-pal <- colorby(factor(1:lenu(clus)))
-centers <- t(sapply(levels(clus), function(clID){
-    colMeans(reducedDim(sce,'umap')[which(clus==clID),])
-}))
-legend('topright', legend=levels(clus), pch=16, col=pal, bty='n')
-points(centers,pch=1,cex=2.5)
-points(centers,pch=16,cex=2.5, col=1)
-text(centers, labels = levels(clus), col = pal, font=2)
-dev.off()
+# umap plot colored by cluster
 
 
 sce$clus <- clus
 
 
-
-table(clus, sce$Sample)
-png(filename = '~/Desktop/cluster_by_samp.png', width = 1000, height = 1000)
-layout(matrix(1:24, ncol=4))
-par(mar=c(3,3,3,1))
-for(i in 1:22){
-    barplot(table(clus, sce$Sample)[i,], col=pal[i], 
-            main=paste('Cluster',i),
-            ylim = c(0,max(table(clus,sce$Sample))))
-}
-dev.off()
-layout(1)
-par(mar=c(5,4,4,2)+.1)
+# barplots showing breakdown of each cluster by sample
+# table(clus, sce$Sample)
 
 
+# save it, so I don't have to keep re-running all this
+saveRDS(sce, file='data/sce.rds')
 
-# plot(reducedDim(sce,'umap'),asp=1, col=colorby(clus))
-# 
-# pal <- colorby(factor(1:lenu(clus)))
-# centers <- t(sapply(levels(clus), function(clID){
-#     colMeans(reducedDim(sce,'umap')[which(clus==clID),])
-# }))
-# legend('right', legend=levels(clus), pch=16, col=pal, bty='n')
-# points(centers,pch=1,cex=2.5)
-# points(centers,pch=16,cex=2.5, col='grey80')
-# text(centers, labels = levels(clus), col = pal, font=2)
 
