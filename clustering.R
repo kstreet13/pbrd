@@ -32,6 +32,8 @@ big <- apply(clusMat,1,function(x){
     })
 })
 h <- hclust(as.dist(1-big))
+
+
 png(filename = '~/Desktop/coclus.png', width = 1000, height = 1000)
 image(big[h$order,h$order])
 dev.off()
@@ -85,7 +87,12 @@ points(locAg, col = 5)
 clus <- factor(clusMat[,which.max(within - between + locAg + sil)])
 
 
+# image(big[h$order,h$order])
+
+
+
 table(clus, sce$Sample)
+
 
 png(filename = '~/Desktop/umap.png', width = 1000, height = 1000, res=100)
 plot(reducedDim(sce,'umap'),asp=1, col=colorby(clus), pch=16, main='UMAP - pbrd_1 and prd_1')
@@ -120,4 +127,14 @@ par(mar=c(5,4,4,2)+.1)
 
 
 
+# plot(reducedDim(sce,'umap'),asp=1, col=colorby(clus))
+# 
+# pal <- colorby(factor(1:lenu(clus)))
+# centers <- t(sapply(levels(clus), function(clID){
+#     colMeans(reducedDim(sce,'umap')[which(clus==clID),])
+# }))
+# legend('right', legend=levels(clus), pch=16, col=pal, bty='n')
+# points(centers,pch=1,cex=2.5)
+# points(centers,pch=16,cex=2.5, col='grey80')
+# text(centers, labels = levels(clus), col = pal, font=2)
 
