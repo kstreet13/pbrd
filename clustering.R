@@ -25,19 +25,19 @@ big <- apply(clusMat,1,function(x){
     })
 })
 h <- hclust(as.dist(1-big))
-image(big[h$order,h$order])
+# image(big[h$order,h$order])
 
 clus <- factor(cutree(h, k = 17))
 
 table(clus, sce$Sample)
-plot(reducedDim(sce,'umap'),asp=1, col=colorby(clus))
-
-pal <- colorby(factor(1:lenu(clus)))
-centers <- t(sapply(levels(clus), function(clID){
-    colMeans(reducedDim(sce,'umap')[which(clus==clID),])
-}))
-legend('right', legend=levels(clus), pch=16, col=pal, bty='n')
-points(centers,pch=1,cex=2.5)
-points(centers,pch=16,cex=2.5, col='grey80')
-text(centers, labels = levels(clus), col = pal, font=2)
+# plot(reducedDim(sce,'umap'),asp=1, col=colorby(clus))
+# 
+# pal <- colorby(factor(1:lenu(clus)))
+# centers <- t(sapply(levels(clus), function(clID){
+#     colMeans(reducedDim(sce,'umap')[which(clus==clID),])
+# }))
+# legend('right', legend=levels(clus), pch=16, col=pal, bty='n')
+# points(centers,pch=1,cex=2.5)
+# points(centers,pch=16,cex=2.5, col='grey80')
+# text(centers, labels = levels(clus), col = pal, font=2)
 

@@ -35,14 +35,15 @@ seu <- RunUMAP(seu, reduction = 'mnn', dims = 1:25)
 reducedDim(sce,'umap') <- seu@reductions$umap@cell.embeddings
 rm(seu)
 
-ind <- sample(ncol(sce))
-plot(reducedDim(sce,'umap')[ind,],asp=1, col=colorby(sce$Sample[ind], alpha=.5))
-layout(matrix(1:2,nrow=1))
-plot(reducedDim(sce,'umap'),asp=1, col='grey90')
-points(reducedDim(sce,'umap')[sce$Sample=='pbrd_1', ], col=alpha(brewer.pal(9,'Set1')[1], alpha=.5))
-plot(reducedDim(sce,'umap'),asp=1, col='grey90')
-points(reducedDim(sce,'umap')[sce$Sample=='prd_1', ], col=alpha(brewer.pal(9,'Set1')[2], alpha=.5))
-layout(1)
+# plot
+# ind <- sample(ncol(sce))
+# plot(reducedDim(sce,'umap')[ind,],asp=1, col=colorby(sce$Sample[ind], alpha=.5))
+# layout(matrix(1:2,nrow=1))
+# plot(reducedDim(sce,'umap'),asp=1, col='grey90')
+# points(reducedDim(sce,'umap')[sce$Sample=='pbrd_1', ], col=alpha(brewer.pal(9,'Set1')[1], alpha=.5))
+# plot(reducedDim(sce,'umap'),asp=1, col='grey90')
+# points(reducedDim(sce,'umap')[sce$Sample=='prd_1', ], col=alpha(brewer.pal(9,'Set1')[2], alpha=.5))
+# layout(1)
 
-# looks better
+# looks better than setup_1
 
