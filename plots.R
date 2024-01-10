@@ -68,16 +68,16 @@ points(locAg, col = 5)
 
 # umap plot, colored by cluster
 # png(filename = '~/Desktop/umap.png', width = 1000, height = 1000, res=100)
-plot(reducedDim(sce,'umap'),asp=1, col=colorby(clus), pch=16, main='UMAP - pbrd_1 and prd_1')
+plot(reducedDim(sce,'umap'),asp=1, col=colorby(sce$clus), pch=16, main='UMAP - pbrd_1 and prd_1')
 # with cluster labels on top
-pal <- colorby(factor(1:lenu(clus)))
-centers <- t(sapply(levels(clus), function(clID){
-    colMeans(reducedDim(sce,'umap')[which(clus==clID),])
+pal <- colorby(factor(1:lenu(sce$clus)))
+centers <- t(sapply(levels(sce$clus), function(clID){
+    colMeans(reducedDim(sce,'umap')[which(sce$clus==clID),])
 }))
-legend('topright', legend=levels(clus), pch=16, col=pal, bty='n')
+legend('topright', legend=levels(sce$clus), pch=16, col=pal, bty='n')
 points(centers,pch=1,cex=2.5)
 points(centers,pch=16,cex=2.5, col=1)
-text(centers, labels = levels(clus), col = pal, font=2)
+text(centers, labels = levels(sce$clus), col = pal, font=2)
 # dev.off()
 
 
@@ -86,9 +86,9 @@ png(filename = '~/Desktop/cluster_by_samp.png', width = 1000, height = 1000)
 layout(matrix(1:24, ncol=4))
 par(mar=c(3,3,3,1))
 for(i in 1:22){
-    barplot(table(clus, sce$Sample)[i,], col=pal[i], 
+    barplot(table(sce$clus, sce$Sample)[i,], col=pal[i], 
             main=paste('Cluster',i),
-            ylim = c(0,max(table(clus,sce$Sample))))
+            ylim = c(0,max(table(sce$clus,sce$Sample))))
 }
 dev.off()
 layout(1)
