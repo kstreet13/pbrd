@@ -1,0 +1,13 @@
+2024-01-18
+----------
+Based on plots.zip from my 2024-01-10 email
+6 and 8 are transition group, only present in experimental group
+Want to add marker genes to dot plot to show the destination
+Mecom is a new gene important for directing blood vessels
+Remove duplicate gene Mecom
+5+11 might be blood vessels
+13+1 -> 6+8 -> 5+11 ???
+Want to identify clusters based on endothelial markers
+Brandon will provide updated list of marker genes
+
+(Cluster numbers no longer relevant)

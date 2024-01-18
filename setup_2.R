@@ -20,7 +20,10 @@ sce <- devianceFeatureSelection(sce, fam = 'binomial', nkeep = 5000)
 
 # initial dimred (~PCA)
 #sce <- nullResiduals(sce, fam = 'binomial', type = 'deviance', batch = factor(sce$Sample))
-assay(sce,'logcounts') <- log1p(assay(sce,'counts'))
+# assay(sce,'logcounts') <- log1p(assay(sce,'counts'))
+norm <- log1p(1e4*t(t(assay(sce,'counts')) / sce$nUMI))
+assay(sce,'logcounts') <- norm
+rm(norm)
 require(batchelor)
 sceMNN <- batchCorrect(sce, batch = sce$Sample, PARAM = FastMnnParam())
 reducedDim(sce,'mnn') <- reducedDim(sceMNN,'corrected')
@@ -28,9 +31,6 @@ rm(sceMNN)
 
 # UMAP
 require(Seurat)
-norm <- log1p(1e4*t(t(assay(sce,'counts')) / colSums(assay(sce,'counts'))))
-assay(sce,'logcounts') <- norm
-rm(norm)
 seu <- as.Seurat(sce)
 seu <- RunUMAP(seu, reduction = 'mnn', dims = 1:25)
 reducedDim(sce,'umap') <- seu@reductions$umap@cell.embeddings

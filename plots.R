@@ -83,9 +83,9 @@ text(centers, labels = levels(sce$clus), col = pal, font=2)
 
 # barplots showing breakdown of each cluster by sample
 png(filename = '~/Desktop/cluster_by_samp.png', width = 1000, height = 1000)
-layout(matrix(1:24, ncol=4))
+layout(matrix(1:20, ncol=4))
 par(mar=c(3,3,3,1))
-for(i in 1:22){
+for(i in 1:length(unique(sce$clus))){
     barplot(table(sce$clus, sce$Sample)[i,], col=pal[i], 
             main=paste('Cluster',i),
             ylim = c(0,max(table(sce$clus,sce$Sample))))
