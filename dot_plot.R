@@ -71,7 +71,7 @@ means <- means[hc.genes$order, hc.clus$order]
 pcts <- pcts[hc.genes$order, hc.clus$order]
 genecol <- genecol[hc.genes$order]
 
-#png(filename = '~/Desktop/dots.png', width = 1000, height = 1000, res=130)
+png(filename = '~/Desktop/dots.png', width = 800, height = 1500, res=130)
 plot(c(1,ncol(means)), c(1,nrow(means)), col='white', asp=1, axes=FALSE, xlab='Cluster', ylab='', main='Potential Marker Genes')
 #abline(v = 1:ncol(means), col = 'lightgrey', lty = 2)
 #abline(h = 1:nrow(means), col = 'lightgrey', lty = 2)
@@ -82,6 +82,6 @@ points(rep(1:ncol(means), each = nrow(means)),
        pch = 16)
 axis(1, at=1:ncol(means), labels = unique(sce$clus)[hc.clus$order], cex.axis=.7)
 axis(2, at=1:nrow(means), labels = rownames(means), las=1, cex.axis=.6)
-#dev.off()
+dev.off()
 
 
