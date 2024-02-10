@@ -15,5 +15,6 @@ Brandon will provide updated list of marker genes
 Old 1+13 are still 1+13
 Old 6+8 are now 7+12
 Old 5+11 are still 5+11
+21 is weird, but in the mix
 
 Got data from Jacob et al. 2023, use with SingleR
