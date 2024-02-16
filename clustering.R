@@ -99,6 +99,6 @@ sce$clus <- clus
 
 
 # save it, so I don't have to keep re-running all this
-saveRDS(sce, file='data/sce.rds')
-
+# saveRDS(sce, file='data/sce.rds')
+# don't do this, just load the version from OneDrive
 
